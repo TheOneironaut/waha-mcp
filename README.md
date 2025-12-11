@@ -24,11 +24,9 @@ A Model Context Protocol (MCP) server that enables AI assistants to interact wit
 
 ## Installation
 
-There are two ways to install and use the WAHA MCP Server:
+### Local Installation
 
-### Option 1: Local Installation (Recommended)
-
-This method installs the server on your machine for full control and customization.
+This project is not published to npm, so you must install it locally from GitHub.
 
 1. **Clone the repository**:
    ```bash
@@ -57,19 +55,24 @@ This method installs the server on your machine for full control and customizati
    # WAHA_SESSION=default  # Optional
    ```
 
-5. **Use with Claude Desktop**:
-   Add to your Claude Desktop configuration file:
+5. **Configure with Cursor** (or Claude Desktop):
+   
+   Edit your MCP configuration file:
    - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-   - **Windows**: `%APPDATA%/Claude/claude_desktop_config.json`
+   - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+   - **Cursor**: Settings → Features → Claude → Edit Config
 
+   **Important**: Replace `/absolute/path/to/waha-mcp` with the actual full path where you cloned the repository.
+
+   Example for Windows:
    ```json
    {
      "mcpServers": {
        "waha": {
          "command": "node",
-         "args": ["/absolute/path/to/waha-mcp/dist/index.js"],
+         "args": ["C:\\Users\\YourUsername\\waha-mcp\\dist\\index.js"],
          "env": {
-           "WAHA_BASE_URL": "https://your-waha-server.com",
+           "WAHA_BASE_URL": "https://waha.goblindeals.org",
            "WAHA_API_KEY": "your-api-key-here"
          }
        }
@@ -77,44 +80,39 @@ This method installs the server on your machine for full control and customizati
    }
    ```
 
-### Option 2: Direct NPX Usage (Quick Start)
+   Example for macOS/Linux:
+   ```json
+   {
+     "mcpServers": {
+       "waha": {
+         "command": "node",
+         "args": ["/Users/yourname/waha-mcp/dist/index.js"],
+         "env": {
+           "WAHA_BASE_URL": "https://waha.goblindeals.org",
+           "WAHA_API_KEY": "your-api-key-here"
+         }
+       }
+     }
+   }
+   ```
 
-Use `npx` to run the server without installing it locally. The configuration must be passed via environment variables.
+6. **Restart Cursor/Claude Desktop** to load the new MCP server.
 
-**Note**: This method downloads and runs the package from npm registry each time. For production use, we recommend Option 1 (Local Installation).
+### Finding the Absolute Path
 
-Add to your Claude Desktop configuration:
-
-```json
-{
-  "mcpServers": {
-    "waha": {
-      "command": "npx",
-      "args": ["waha-mcp-server"],
-      "env": {
-        "WAHA_BASE_URL": "https://your-waha-server.com",
-        "WAHA_API_KEY": "your-api-key-here"
-      }
-    }
-  }
-}
+**Windows (PowerShell):**
+```powershell
+cd path\to\waha-mcp
+Get-Location
+# Copy the output, e.g., C:\Users\YourName\waha-mcp
 ```
 
-### npm vs npx - What's the Difference?
-
-| Aspect | npm (Option 1) | npx (Option 2) |
-|--------|----------------|----------------|
-| **Installation** | Clone repo + `npm install` | No installation needed |
-| **Disk Space** | ~50MB (includes node_modules) | Downloads on each run |
-| **Performance** | Faster (runs from local files) | Slower (downloads first time) |
-| **Updates** | Manual (`git pull && npm install`) | Automatic (latest version) |
-| **Customization** | Full access to source code | Limited to env vars |
-| **Best For** | Production, Development, Custom modifications | Quick testing, CI/CD |
-| **Configuration** | .env file + command args | Environment variables only |
-
-**Recommendation**: 
-- 🏆 **Use npm (Option 1)** if you want stability, performance, and customization
-- ⚡ **Use npx (Option 2)** for quick testing or if you always want the latest version
+**macOS/Linux:**
+```bash
+cd path/to/waha-mcp
+pwd
+# Copy the output, e.g., /Users/yourname/waha-mcp
+```
 
 ## Configuration
 
@@ -203,61 +201,49 @@ Use the inspector to:
 npm start
 ```
 
-## Usage with Claude Desktop
+## Usage with Cursor and Claude Desktop
 
-The configuration depends on your installation method:
+After installation, configure your MCP client to use the server.
 
-### If Using Local Installation (npm)
+### Configuration File Locations
 
-Edit your Claude Desktop configuration file:
-- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- **Windows**: `%APPDATA%/Claude/claude_desktop_config.json`
+- **Claude Desktop (macOS)**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Claude Desktop (Windows)**: `%APPDATA%\Claude\claude_desktop_config.json`
+- **Cursor**: Open Settings → Features → Claude → Edit Config
 
-#### Basic Configuration (No Default Session)
+### Basic Configuration (No Default Session)
+
+Use this if you want to specify the session for each request:
+
 ```json
 {
   "mcpServers": {
     "waha": {
       "command": "node",
-      "args": ["/absolute/path/to/waha-mcp/dist/index.js"],
+      "args": ["C:\\Users\\amitayb\\waha-mcp\\dist\\index.js"],
       "env": {
-        "WAHA_BASE_URL": "https://your-waha-server.com",
-        "WAHA_API_KEY": "your-api-key-here"
+        "WAHA_BASE_URL": "https://waha.goblindeals.org",
+        "WAHA_API_KEY": "0572a1f46333a4f11bbd6563ad1fc74c9dd90b698683d02036a76c7a3f74648c"
       }
     }
   }
 }
 ```
 
-#### Advanced Configuration (With Default Session)
+### Advanced Configuration (With Default Session)
+
+Use this if you have a primary session you use most often:
+
 ```json
 {
   "mcpServers": {
     "waha": {
       "command": "node",
-      "args": ["/absolute/path/to/waha-mcp/dist/index.js"],
+      "args": ["C:\\Users\\amitayb\\waha-mcp\\dist\\index.js"],
       "env": {
-        "WAHA_BASE_URL": "https://your-waha-server.com",
-        "WAHA_API_KEY": "your-api-key-here",
-        "WAHA_SESSION": "default"
-      }
-    }
-  }
-}
-```
-
-### If Using NPX
-
-```json
-{
-  "mcpServers": {
-    "waha": {
-      "command": "npx",
-      "args": ["waha-mcp-server"],
-      "env": {
-        "WAHA_BASE_URL": "https://your-waha-server.com",
-        "WAHA_API_KEY": "your-api-key-here",
-        "WAHA_SESSION": "default"
+        "WAHA_BASE_URL": "https://waha.goblindeals.org",
+        "WAHA_API_KEY": "0572a1f46333a4f11bbd6563ad1fc74c9dd90b698683d02036a76c7a3f74648c",
+        "WAHA_SESSION": "bot10"
       }
     }
   }
@@ -266,11 +252,82 @@ Edit your Claude Desktop configuration file:
 
 ### Configuration Notes
 
-**`WAHA_SESSION` is optional**:
-- ✅ If **not provided**: You specify the session in each tool call
-- ✅ If **provided**: It serves as the default session when not specified in tool calls
+**Path Format:**
+- **Windows**: Use double backslashes `\\` or forward slashes `/`
+  - ✅ `C:\\Users\\amitayb\\waha-mcp\\dist\\index.js`
+  - ✅ `C:/Users/amitayb/waha-mcp/dist/index.js`
+- **macOS/Linux**: Use forward slashes `/`
+  - ✅ `/Users/yourname/waha-mcp/dist/index.js`
 
-**Tip**: Set `WAHA_SESSION` to your most commonly used session name (e.g., "default", "bot10"). You can still override it in individual tool calls.
+**`WAHA_SESSION` (Optional):**
+- ✅ If **not provided**: Specify session in each tool call
+- ✅ If **provided**: Used as default when session not specified in tool call
+- 💡 **Tip**: Set to your most-used session (e.g., "bot10", "default")
+
+### After Configuration
+
+1. **Save** the configuration file
+2. **Restart** Cursor or Claude Desktop
+3. **Verify**: The WAHA tools should appear in the MCP tools list
+
+## Troubleshooting
+
+### Error: "npm error 404 Not Found - waha-mcp-server"
+
+**Problem**: You tried to use `npx waha-mcp-server` but the package is not on npm.
+
+**Solution**: This project is only available on GitHub. You must use local installation (see Installation section above). Update your configuration to use `node` with the path to `dist/index.js`:
+
+```json
+{
+  "command": "node",
+  "args": ["C:\\full\\path\\to\\waha-mcp\\dist\\index.js"]
+}
+```
+
+### Error: "No server info found"
+
+**Problem**: The MCP server failed to start.
+
+**Solutions**:
+1. **Check the path**: Make sure the path to `dist/index.js` is correct and absolute
+2. **Build the project**: Run `npm run build` in the project directory
+3. **Check Node.js**: Make sure Node.js is installed (`node --version`)
+4. **Check logs**: Look at Cursor/Claude logs for detailed error messages
+
+### Error: "WAHA_BASE_URL environment variable is required"
+
+**Problem**: Missing required configuration.
+
+**Solution**: Add `WAHA_BASE_URL` and `WAHA_API_KEY` to the `env` section in your config:
+
+```json
+{
+  "env": {
+    "WAHA_BASE_URL": "https://your-waha-server.com",
+    "WAHA_API_KEY": "your-api-key-here"
+  }
+}
+```
+
+### Server works in terminal but not in Cursor
+
+**Problem**: Works with `npm start` but not in Cursor.
+
+**Solutions**:
+1. **Use full paths**: Don't use `~` or relative paths, use absolute paths
+2. **Check current directory**: The MCP server runs from its own directory, not Cursor's
+3. **Verify environment variables**: All config must be in the JSON config file
+
+### How to verify it's working
+
+Run the test script:
+```bash
+cd /path/to/waha-mcp
+node demo_multi_session.js
+```
+
+If this works, your installation is correct. The issue is likely with the Cursor/Claude configuration.
 
 ### Multi-Session Usage Examples
 
