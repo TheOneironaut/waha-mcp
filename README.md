@@ -24,17 +24,97 @@ A Model Context Protocol (MCP) server that enables AI assistants to interact wit
 
 ## Installation
 
-1. Clone this repository
-2. Install dependencies:
+There are two ways to install and use the WAHA MCP Server:
+
+### Option 1: Local Installation (Recommended)
+
+This method installs the server on your machine for full control and customization.
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/TheOneironaut/waha-mcp.git
+   cd waha-mcp
+   ```
+
+2. **Install dependencies**:
    ```bash
    npm install
    ```
 
-3. Configure your WAHA API connection:
+3. **Build the project**:
+   ```bash
+   npm run build
+   ```
+
+4. **Configure your WAHA API connection**:
    ```bash
    cp .env.example .env
    ```
-   Then edit `.env` with your WAHA instance details.
+   Then edit `.env` with your WAHA instance details:
+   ```bash
+   WAHA_BASE_URL=https://your-waha-server.com
+   WAHA_API_KEY=your-api-key-here
+   # WAHA_SESSION=default  # Optional
+   ```
+
+5. **Use with Claude Desktop**:
+   Add to your Claude Desktop configuration file:
+   - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - **Windows**: `%APPDATA%/Claude/claude_desktop_config.json`
+
+   ```json
+   {
+     "mcpServers": {
+       "waha": {
+         "command": "node",
+         "args": ["/absolute/path/to/waha-mcp/dist/index.js"],
+         "env": {
+           "WAHA_BASE_URL": "https://your-waha-server.com",
+           "WAHA_API_KEY": "your-api-key-here"
+         }
+       }
+     }
+   }
+   ```
+
+### Option 2: Direct NPX Usage (Quick Start)
+
+Use `npx` to run the server without installing it locally. The configuration must be passed via environment variables.
+
+**Note**: This method downloads and runs the package from npm registry each time. For production use, we recommend Option 1 (Local Installation).
+
+Add to your Claude Desktop configuration:
+
+```json
+{
+  "mcpServers": {
+    "waha": {
+      "command": "npx",
+      "args": ["waha-mcp-server"],
+      "env": {
+        "WAHA_BASE_URL": "https://your-waha-server.com",
+        "WAHA_API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}
+```
+
+### npm vs npx - What's the Difference?
+
+| Aspect | npm (Option 1) | npx (Option 2) |
+|--------|----------------|----------------|
+| **Installation** | Clone repo + `npm install` | No installation needed |
+| **Disk Space** | ~50MB (includes node_modules) | Downloads on each run |
+| **Performance** | Faster (runs from local files) | Slower (downloads first time) |
+| **Updates** | Manual (`git pull && npm install`) | Automatic (latest version) |
+| **Customization** | Full access to source code | Limited to env vars |
+| **Best For** | Production, Development, Custom modifications | Quick testing, CI/CD |
+| **Configuration** | .env file + command args | Environment variables only |
+
+**Recommendation**: 
+- 🏆 **Use npm (Option 1)** if you want stability, performance, and customization
+- ⚡ **Use npx (Option 2)** for quick testing or if you always want the latest version
 
 ## Configuration
 
@@ -125,17 +205,23 @@ npm start
 
 ## Usage with Claude Desktop
 
-Add this to your Claude Desktop MCP configuration:
+The configuration depends on your installation method:
 
-### Basic Configuration (Single Session)
+### If Using Local Installation (npm)
+
+Edit your Claude Desktop configuration file:
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%/Claude/claude_desktop_config.json`
+
+#### Basic Configuration (No Default Session)
 ```json
 {
   "mcpServers": {
     "waha": {
       "command": "node",
-      "args": ["/absolute/path/to/waha-mcp-server/dist/index.js"],
+      "args": ["/absolute/path/to/waha-mcp/dist/index.js"],
       "env": {
-        "WAHA_BASE_URL": "http://localhost:3000",
+        "WAHA_BASE_URL": "https://your-waha-server.com",
         "WAHA_API_KEY": "your-api-key-here"
       }
     }
@@ -143,17 +229,15 @@ Add this to your Claude Desktop MCP configuration:
 }
 ```
 
-**Note**: `WAHA_SESSION` is **optional**. If not provided, you can specify the session in each tool call. If provided, it serves as the default session when not specified in tool calls.
-
-### Advanced Configuration (With Default Session)
+#### Advanced Configuration (With Default Session)
 ```json
 {
   "mcpServers": {
     "waha": {
       "command": "node",
-      "args": ["/absolute/path/to/waha-mcp-server/dist/index.js"],
+      "args": ["/absolute/path/to/waha-mcp/dist/index.js"],
       "env": {
-        "WAHA_BASE_URL": "http://localhost:3000",
+        "WAHA_BASE_URL": "https://your-waha-server.com",
         "WAHA_API_KEY": "your-api-key-here",
         "WAHA_SESSION": "default"
       }
@@ -162,7 +246,31 @@ Add this to your Claude Desktop MCP configuration:
 }
 ```
 
-**Tip**: Set `WAHA_SESSION` to your most commonly used session name. You can still override it in individual tool calls.
+### If Using NPX
+
+```json
+{
+  "mcpServers": {
+    "waha": {
+      "command": "npx",
+      "args": ["waha-mcp-server"],
+      "env": {
+        "WAHA_BASE_URL": "https://your-waha-server.com",
+        "WAHA_API_KEY": "your-api-key-here",
+        "WAHA_SESSION": "default"
+      }
+    }
+  }
+}
+```
+
+### Configuration Notes
+
+**`WAHA_SESSION` is optional**:
+- ✅ If **not provided**: You specify the session in each tool call
+- ✅ If **provided**: It serves as the default session when not specified in tool calls
+
+**Tip**: Set `WAHA_SESSION` to your most commonly used session name (e.g., "default", "bot10"). You can still override it in individual tool calls.
 
 ### Multi-Session Usage Examples
 
