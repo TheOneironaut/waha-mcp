@@ -1,24 +1,47 @@
 {
   "name": "waha-mcp-server",
   "version": "1.0.0",
-  "description": "Model Context Protocol server for WAHA WhatsApp HTTP API",
+  "description": "Model Context Protocol server for WAHA WhatsApp HTTP API - Multi-session support for managing multiple WhatsApp accounts",
   "type": "module",
   "main": "dist/index.js",
+  "bin": {
+    "waha-mcp-server": "dist/index.js"
+  },
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js",
     "inspector": "npx @modelcontextprotocol/inspector node dist/index.js",
+    "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "mcp",
     "whatsapp",
     "waha",
-    "model-context-protocol"
+    "model-context-protocol",
+    "claude",
+    "cursor",
+    "ai",
+    "chatbot",
+    "multi-session",
+    "whatsapp-api"
   ],
-  "author": "",
+  "author": "TheOneironaut",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TheOneironaut/waha-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TheOneironaut/waha-mcp/issues"
+  },
+  "homepage": "https://github.com/TheOneironaut/waha-mcp#readme",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.20.1",
     "@ngrok/ngrok": "^1.5.2",

@@ -24,9 +24,19 @@ A Model Context Protocol (MCP) server that enables AI assistants to interact wit
 
 ## Installation
 
-### Local Installation
+### Option 1: Install from npm (Recommended)
 
-This project is not published to npm, so you must install it locally from GitHub.
+The easiest way to use WAHA MCP Server:
+
+```bash
+npm install -g waha-mcp-server
+```
+
+Then configure your MCP client (see [Configuration](#configuration) section below).
+
+### Option 2: Local Development Installation
+
+For development or customization:
 
 1. **Clone the repository**:
    ```bash
@@ -62,7 +72,7 @@ This project is not published to npm, so you must install it locally from GitHub
    - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
    - **Cursor**: Settings → Features → Claude → Edit Config
 
-   **Important**: Replace `/absolute/path/to/waha-mcp` with the actual full path where you cloned the repository.
+   **For local installation**, replace the path with where you cloned the repository:
 
    Example for Windows:
    ```json
@@ -95,6 +105,50 @@ This project is not published to npm, so you must install it locally from GitHub
      }
    }
    ```
+
+## Configuration
+
+### For npm Installation
+
+If you installed via npm (`npm install -g waha-mcp-server`), configure your MCP client:
+
+#### Claude Desktop / Cursor
+
+Edit your MCP configuration file:
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+- **Cursor**: Settings → Features → Claude → Edit Config
+
+**Using npx (recommended - always uses latest version)**:
+```json
+{
+  "mcpServers": {
+    "waha": {
+      "command": "npx",
+      "args": ["-y", "waha-mcp-server"],
+      "env": {
+        "WAHA_BASE_URL": "https://waha.goblindeals.org",
+        "WAHA_API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}
+```
+
+**Using installed binary**:
+```json
+{
+  "mcpServers": {
+    "waha": {
+      "command": "waha-mcp-server",
+      "env": {
+        "WAHA_BASE_URL": "https://waha.goblindeals.org",
+        "WAHA_API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}
+```
 
 6. **Restart Cursor/Claude Desktop** to load the new MCP server.
 
