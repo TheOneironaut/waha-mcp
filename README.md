@@ -4,6 +4,7 @@ A Model Context Protocol (MCP) server that enables AI assistants to interact wit
 
 ## Features
 
+- **🚀 Multi-Session Support**: Manage multiple WhatsApp accounts simultaneously from one MCP server
 - **🔐 Session Management**: Complete control over WhatsApp sessions - create, start, stop, restart, authenticate
 - **📝 Message Operations**: Send, receive, edit, delete, pin, react, and mark messages as read
 - **📁 Chat Management**: Archive, delete, and organize chats with profile pictures
@@ -18,6 +19,8 @@ A Model Context Protocol (MCP) server that enables AI assistants to interact wit
 - **🎯 MCP Integration**: Full compatibility with MCP clients like Claude Desktop
 
 **Total: 74+ comprehensive WAHA API tools** covering all major WhatsApp functionality!
+
+> **✨ New**: Multi-session support enables managing multiple WhatsApp accounts (personal, business, bots) from a single MCP server. Each tool accepts an optional `session` parameter to specify which account to use.
 
 ## Installation
 
@@ -124,6 +127,25 @@ npm start
 
 Add this to your Claude Desktop MCP configuration:
 
+### Basic Configuration (Single Session)
+```json
+{
+  "mcpServers": {
+    "waha": {
+      "command": "node",
+      "args": ["/absolute/path/to/waha-mcp-server/dist/index.js"],
+      "env": {
+        "WAHA_BASE_URL": "http://localhost:3000",
+        "WAHA_API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}
+```
+
+**Note**: `WAHA_SESSION` is **optional**. If not provided, you can specify the session in each tool call. If provided, it serves as the default session when not specified in tool calls.
+
+### Advanced Configuration (With Default Session)
 ```json
 {
   "mcpServers": {
@@ -136,6 +158,52 @@ Add this to your Claude Desktop MCP configuration:
         "WAHA_SESSION": "default"
       }
     }
+  }
+}
+```
+
+**Tip**: Set `WAHA_SESSION` to your most commonly used session name. You can still override it in individual tool calls.
+
+### Multi-Session Usage Examples
+
+Once configured, you can:
+
+**Use the default session** (if WAHA_SESSION is set):
+```javascript
+// Uses WAHA_SESSION from config
+{
+  "name": "waha_get_chats",
+  "arguments": { "limit": 10 }
+}
+```
+
+**Use a specific session**:
+```javascript
+// Override to use a different session
+{
+  "name": "waha_get_chats",
+  "arguments": {
+    "session": "business",
+    "limit": 10
+  }
+}
+```
+
+**Work with multiple sessions**:
+```javascript
+// List all sessions on your WAHA server
+{
+  "name": "waha_list_sessions",
+  "arguments": { "all": true }
+}
+
+// Send message from specific bot
+{
+  "name": "waha_send_message",
+  "arguments": {
+    "session": "bot10",
+    "chatId": "972501234567@c.us",
+    "text": "Hello from bot10!"
   }
 }
 ```
