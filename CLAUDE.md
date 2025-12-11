@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-WAHA MCP Server is a comprehensive Model Context Protocol server that enables AI assistants to interact with WhatsApp through the WAHA (WhatsApp HTTP API) platform. It provides **74+ tools** covering all major WAHA capabilities: session management, messaging, polls, status/stories, groups, contacts, labels, profile management, presence, and real-time webhook notifications.
+WAHA MCP Server is a comprehensive Model Context Protocol server that enables AI assistants to interact with WhatsApp through the WAHA (WhatsApp HTTP API) platform. It provides **76+ tools** covering all major WAHA capabilities: session management, messaging, polls, status/stories, groups, contacts, labels, profile management, presence, real-time webhook notifications, and utility tools (sleep/wait) for automation workflows.
 
 **Tech Stack**: TypeScript, Node.js, MCP SDK, WAHA API, Express (webhooks), ngrok (webhook tunneling)
 

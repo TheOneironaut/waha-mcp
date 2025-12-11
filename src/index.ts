@@ -1227,6 +1227,12 @@ class WAHAMCPServer {
           case "waha_delete_my_profile_picture":
             return await newHandlers.handleDeleteMyProfilePicture(this.wahaClient, args);
           
+          // === UTILITY TOOLS ===
+          case "sleep":
+            return await newHandlers.handleSleep(this.wahaClient, args);
+          case "wait":
+            return await newHandlers.handleWait(this.wahaClient, args);
+          
           default:
             throw new Error(`Unknown tool: ${name}`);
         }

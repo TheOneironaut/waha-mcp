@@ -8,6 +8,7 @@ import { pollTools } from "./poll-tools.js";
 import { statusTools } from "./status-tools.js";
 import { labelTools } from "./label-tools.js";
 import { profileTools } from "./profile-tools.js";
+import { utilityTools } from "./utility-tools.js";
 
 /**
  * All available WAHA MCP tools combined
@@ -18,7 +19,8 @@ export const allNewTools = [
   ...statusTools,
   ...labelTools,
   ...profileTools,
+  ...utilityTools,
 ];
 
 // Export individual tool sets for selective imports
-export { sessionTools, pollTools, statusTools, labelTools, profileTools };
+export { sessionTools, pollTools, statusTools, labelTools, profileTools, utilityTools };

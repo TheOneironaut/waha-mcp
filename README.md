@@ -17,8 +17,9 @@ A Model Context Protocol (MCP) server that enables AI assistants to interact wit
 - **👁️ Presence**: Monitor and set online/typing status
 - **🔄 Real-time Events**: Webhook and WebSocket support for live updates
 - **🎯 MCP Integration**: Full compatibility with MCP clients like Claude Desktop
+- **⏱️ Utility Tools**: Sleep/wait functions for automation workflows and rate limiting
 
-**Total: 74+ comprehensive WAHA API tools** covering all major WhatsApp functionality!
+**Total: 76+ comprehensive tools** covering all major WhatsApp functionality and automation utilities!
 
 > **✨ New**: Multi-session support enables managing multiple WhatsApp accounts (personal, business, bots) from a single MCP server. Each tool accepts an optional `session` parameter to specify which account to use.
 
@@ -536,6 +537,10 @@ The WAHA MCP Server now provides **74+ comprehensive tools** covering all major 
 - **waha_request_pairing_code**: Request pairing code for phone auth
 - **waha_get_screenshot**: Get session screenshot (WEBJS only)
 
+### ⏱️ Utility Tools (2 tools)
+- **sleep**: Pause execution for a specified duration (milliseconds or seconds)
+- **wait**: Wait for a specified number of seconds (alias for sleep)
+
 ---
 
 ### Example: waha_send_poll
@@ -594,6 +599,44 @@ Or using base64:
   }
 }
 ```
+
+### Example: sleep / wait
+Pause execution between operations for rate limiting or automation workflows:
+
+**Using sleep with milliseconds:**
+```json
+{
+  "duration": 5000,
+  "message": "Waiting for rate limit cooldown..."
+}
+```
+
+**Using sleep with seconds:**
+```json
+{
+  "seconds": 3,
+  "message": "Pausing between bulk operations"
+}
+```
+
+**Using wait (alias for sleep):**
+```json
+{
+  "seconds": 2,
+  "message": "Waiting for user response..."
+}
+```
+
+**Practical automation example:**
+```
+1. Send message to contact A
+2. Use sleep tool: wait 2 seconds
+3. Send message to contact B
+4. Use sleep tool: wait 2 seconds
+5. Send message to contact C
+```
+
+This prevents rate limiting and makes your automation more natural and human-like.
 
 ## Project Structure
 

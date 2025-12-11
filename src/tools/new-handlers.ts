@@ -643,3 +643,56 @@ export async function handleDeleteMyProfilePicture(wahaClient: WAHAClient, args:
     ],
   };
 }
+
+/**
+ * Utility Tool Handlers
+ */
+
+export async function handleSleep(wahaClient: WAHAClient, args: any) {
+  // Calculate duration in milliseconds
+  let durationMs: number;
+  
+  if (args.seconds !== undefined) {
+    // If seconds provided, use it (takes precedence)
+    durationMs = args.seconds * 1000;
+  } else if (args.duration !== undefined) {
+    // Otherwise use duration in milliseconds
+    durationMs = args.duration;
+  } else {
+    // Default to 1 second if nothing provided
+    durationMs = 1000;
+  }
+
+  // Validate max duration (5 minutes)
+  if (durationMs > 300000) {
+    throw new Error("Sleep duration cannot exceed 5 minutes (300000ms / 300 seconds)");
+  }
+
+  const message = args.message || "Sleeping...";
+  const durationSeconds = (durationMs / 1000).toFixed(2);
+  
+  const startTime = Date.now();
+  
+  // Perform the actual sleep
+  await new Promise(resolve => setTimeout(resolve, durationMs));
+  
+  const actualDuration = Date.now() - startTime;
+  const actualSeconds = (actualDuration / 1000).toFixed(2);
+
+  return {
+    content: [
+      {
+        type: "text",
+        text: formatSuccess(
+          "Sleep completed",
+          `${message}\nRequested duration: ${durationSeconds}s\nActual duration: ${actualSeconds}s\nCompleted at: ${new Date().toISOString()}`
+        ),
+      },
+    ],
+  };
+}
+
+export async function handleWait(wahaClient: WAHAClient, args: any) {
+  // Wait is just an alias for sleep with seconds parameter
+  return handleSleep(wahaClient, args);
+}
