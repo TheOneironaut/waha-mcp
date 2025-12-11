@@ -1,6 +1,6 @@
 {
   "name": "waha-mcp-server",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Model Context Protocol server for WAHA WhatsApp HTTP API - Multi-session support for managing multiple WhatsApp accounts",
   "type": "module",
   "main": "dist/index.js",
