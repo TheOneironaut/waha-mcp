@@ -11,6 +11,11 @@ export const statusTools = [
     inputSchema: {
       type: "object" as const,
       properties: {
+        session: {
+          type: "string" as const,
+          description:
+            "WhatsApp session name (optional, defaults to configured WAHA_SESSION if not provided)",
+        },
         text: {
           type: "string" as const,
           description: "Text content for the status",
@@ -35,6 +40,11 @@ export const statusTools = [
     inputSchema: {
       type: "object" as const,
       properties: {
+        session: {
+          type: "string" as const,
+          description:
+            "WhatsApp session name (optional, defaults to configured WAHA_SESSION if not provided)",
+        },
         file: {
           type: "object" as const,
           description: "Media file to send",
@@ -78,7 +88,12 @@ export const statusTools = [
       "Get all available statuses (stories) from your contacts. Returns statuses that are currently visible (within 24 hours).",
     inputSchema: {
       type: "object" as const,
-      properties: {},
+      properties: {
+        session: {
+          type: "string" as const,
+          description:
+            "WhatsApp session name (optional, defaults to configured WAHA_SESSION if not provided)",
+        },},
     },
   },
   {
@@ -88,6 +103,11 @@ export const statusTools = [
     inputSchema: {
       type: "object" as const,
       properties: {
+        session: {
+          type: "string" as const,
+          description:
+            "WhatsApp session name (optional, defaults to configured WAHA_SESSION if not provided)",
+        },
         messageId: {
           type: "string" as const,
           description: "Message ID of the status to delete",
