@@ -90,6 +90,58 @@ export class WAHAClient {
   }
 
   /**
+   * Request method that expects text response instead of JSON
+   * Used for endpoints that return plain text (like invite codes)
+   */
+  private async requestText(
+    endpoint: string,
+    options: RequestInit = {}
+  ): Promise<string> {
+    const url = `${this.baseUrl}${endpoint}`;
+
+    const headers: Record<string, string> = {
+      "X-Api-Key": this.apiKey,
+      ...(options.headers as Record<string, string>),
+    };
+
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers,
+      });
+
+      // Handle non-2xx responses
+      if (!response.ok) {
+        let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+
+        try {
+          const errorData = await response.json() as WAHAErrorResponse;
+          errorMessage = errorData.message || errorData.error || errorMessage;
+        } catch {
+          // If we can't parse error JSON, use the status text
+        }
+
+        throw new WAHAError(errorMessage, response.status);
+      }
+
+      // Return text response
+      return await response.text();
+    } catch (error) {
+      if (error instanceof WAHAError) {
+        throw error;
+      }
+
+      // Handle network errors or other fetch errors
+      const message = error instanceof Error ? error.message : String(error);
+      throw new WAHAError(
+        `Failed to connect to WAHA API: ${message}`,
+        undefined,
+        error
+      );
+    }
+  }
+
+  /**
    * Build query string from params object
    */
   private buildQueryString(params: Record<string, any>): string {
@@ -1089,11 +1141,16 @@ export class WAHAClient {
       throw new WAHAError("groupId is required");
     }
 
-    const endpoint = `/api/${session}/groups/${encodeURIComponent(groupId)}/invite-code`;
+    // Ensure groupId has @g.us suffix
+    const formattedGroupId = groupId.includes('@') ? groupId : `${groupId}@g.us`;
+    const endpoint = `/api/${session}/groups/${encodeURIComponent(formattedGroupId)}/invite-code`;
 
-    return this.request<{ inviteCode: string }>(endpoint, {
+    // WAHA API returns plain text (URL) instead of JSON
+    const inviteUrl = await this.requestText(endpoint, {
       method: "GET",
     });
+
+    return { inviteCode: inviteUrl };
   }
 
   /**
@@ -1105,11 +1162,16 @@ export class WAHAClient {
       throw new WAHAError("groupId is required");
     }
 
-    const endpoint = `/api/${session}/groups/${encodeURIComponent(groupId)}/invite-code/revoke`;
+    // Ensure groupId has @g.us suffix
+    const formattedGroupId = groupId.includes('@') ? groupId : `${groupId}@g.us`;
+    const endpoint = `/api/${session}/groups/${encodeURIComponent(formattedGroupId)}/invite-code/revoke`;
 
-    return this.request<{ inviteCode: string }>(endpoint, {
+    // WAHA API returns plain text (URL) instead of JSON
+    const inviteUrl = await this.requestText(endpoint, {
       method: "POST",
     });
+
+    return { inviteCode: inviteUrl };
   }
 
   /**
